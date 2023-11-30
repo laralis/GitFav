@@ -202,3 +202,6 @@ table.isEmpty .empty img{
   width: 13.2rem;
   height: 12.5rem;
 }
+a{
+  text-decoration: none;
+}
