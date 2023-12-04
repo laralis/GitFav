@@ -1,7 +1,9 @@
 import { update, noUsersYet } from "./update.js";
-import { createLineOnTable } from "./savedUsers.js";
+import { createLineOnTable, findOnStorage } from "./savedUsers.js";
 const field = document.querySelector("#search");
-let tableData = JSON.parse(localStorage.getItem("@github-fav")) || [];
+let tableData = JSON.parse(localStorage.getItem("@github-fav:")) || [];
+
+const tabela = document.querySelector("tbody");
 
 export function search() {
   newUser();
@@ -13,10 +15,10 @@ function saveOnStorage(newLine) {
   localStorage.setItem("@github-fav:", JSON.stringify(tableData));
 }
 export function deleteFromStorage(newLine) {
-  const filteredEntries = tableData.filter(
-    (entry) => entry.login != newLine.login
-  );
-  console.log(filteredEntries)
+  const login = newLine.querySelector(".user span").textContent;
+  let filteredEntries = tableData.filter(function (entry) {
+    return entry.login != login;
+  });
   tableData = filteredEntries;
   localStorage.setItem("@github-fav:", JSON.stringify(tableData));
 }
@@ -56,12 +58,11 @@ async function newUser() {
         newLine.querySelector(".followers").textContent = `${data.followers}`;
         newLine.querySelector(".remove").onclick = () => {
           let index = tableData.indexOf(newLine);
-          deleteFromStorage(newLine, index);
+          deleteFromStorage(newLine);
           newLine.closest("tr").remove();
           noUsersYet();
         };
 
-        const tabela = document.querySelector("tbody");
         tabela.appendChild(newLine);
         saveOnStorage(data);
       }
